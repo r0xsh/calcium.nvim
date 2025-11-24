@@ -86,7 +86,7 @@ y = x * pi -- = 12.5663706144
 - [ ] Fix
   - [ ] Keep indention for `:Calcium replace`
   - [ ] `./plugin/calcium.lua`, should it have more checks? Should everything be in another path (so it doesn't load on start), should it have the global variable check?
-- [ ] Cmdline `<mode>` suggestions
+- [x] Cmdline `<mode>` suggestions
 - [ ] Cmdline calculations
 - [ ] Smart selection when no visual selection is provided (e.g., "I have `2 + 1` cats")
 - [ ] Boolean result when a `=` is already present

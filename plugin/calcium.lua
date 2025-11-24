@@ -24,5 +24,12 @@ vim.api.nvim_create_user_command("Calcium", function(opts)
 end, {
 	nargs = "?",
 	range = true,
+	complete = function(_, cmdline, _)
+		if cmdline:find("%s+%a") then
+			return {}
+		end
+
+		return { "append", "replace" }
+	end,
 	desc = "Calculate",
 })
