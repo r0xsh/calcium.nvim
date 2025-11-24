@@ -24,27 +24,5 @@ vim.api.nvim_create_user_command("Calcium", function(opts)
 end, {
 	nargs = "?",
 	range = true,
-	desc = "Calculate expression (append or replace)",
-})
-
-vim.api.nvim_create_user_command("CalciumAppend", function(opts)
-	local visual = opts.range > 0
-	require("calcium").calculate({
-		mode = "append",
-		visual = visual,
-	})
-end, {
-	range = true,
-	desc = "Calculate and append result",
-})
-
-vim.api.nvim_create_user_command("CalciumReplace", function(opts)
-	local visual = opts.range > 0
-	require("calcium").calculate({
-		mode = "replace",
-		visual = visual,
-	})
-end, {
-	range = true,
-	desc = "Calculate and replace with result",
+	desc = "Calculate",
 })

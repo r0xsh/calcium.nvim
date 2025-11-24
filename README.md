@@ -84,7 +84,7 @@ y = x * pi -- = 12.5663706144
 ## 🏆 Roadmap
 
 - [ ] Quick fixes before publishing
-  - [ ] Remove `CalciumAppend` and `CalciumReplace` commands
+  - [x] Remove `CalciumAppend` and `CalciumReplace` commands
   - [x] Use `mode` and `visual` vars instead of `opts` for `calculate()`
   - [ ] Notification title
 - [ ] Cmdline calculations
