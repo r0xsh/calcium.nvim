@@ -4,7 +4,7 @@ A powerful Neovim plugin to calculate mathematical expressions with visual mode 
 
 ## ✨ Features
 
-- 👍 **Simple & Complex Expressions**: Handle any mathematical expression, see [𝑓unctions](#𝑓-available-functions) section.
+- 👍 **Simple & Complex Expressions**: Handle any mathematical expression, see the [𝑓unctions](#𝑓-available-functions) section.
 - 𝑓𝑥 **Variable Support**: Use variables anywhere in your buffer.
 - 🎯 **Work in the buffer**: Evaluates expression in visual selection or current line.
 
@@ -85,6 +85,7 @@ y = x * pi -- = 12.5663706144
 
 - [ ] Fix
   - [ ] Keep indention for `:Calcium replace`
+  - [ ] Handle whole line selection and newline character selection
   - [ ] `./plugin/calcium.lua`, should it have more checks? Should everything be in another path (so it doesn't load on start), should it have the global variable check?
 - [x] Cmdline `<mode>` suggestions
 - [ ] Cmdline calculations
