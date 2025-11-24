@@ -83,10 +83,6 @@ y = x * pi -- = 12.5663706144
 
 ## 🏆 Roadmap
 
-- [x] Quick fixes before publishing
-  - [x] Remove `CalciumAppend` and `CalciumReplace` commands
-  - [x] Use `mode` and `visual` vars instead of `opts` for `calculate()`
-  - [x] Notification title
 - [ ] Fix
   - [ ] Keep indention for `:Calcium replace`
   - [ ] `./plugin/calcium.lua`, should it have more checks? Should everything be in another path (so it doesn't load on start), should it have the global variable check?
