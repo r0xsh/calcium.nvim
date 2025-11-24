@@ -85,6 +85,7 @@ y = x * pi -- = 12.5663706144
 
 - [ ] Quick fixes before publishing
   - [ ] Remove `CalciumAppend` and `CalciumReplace` commands
+  - [x] Use `mode` and `visual` vars instead of `opts` for `calculate()`
   - [ ] Notification title
 - [ ] Cmdline calculations
 - [ ] Smart selection when no visual selection is provided (e.g., "I have `2 + 1` cats")

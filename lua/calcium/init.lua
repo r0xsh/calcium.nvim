@@ -6,15 +6,14 @@ function M.setup(opts)
 	config.setup(opts)
 end
 
-function M.calculate(opts)
-	opts = opts or {}
-	local mode = opts.mode or "append"
-	local use_visual = opts.visual or false
+function M.calculate(mode, visual)
+	mode = mode or "append"
+	visual = visual or false
 
 	local expr
 	local start_line, start_col, end_line, end_col
 
-	if use_visual then
+	if visual then
 		start_line, start_col = unpack(vim.api.nvim_buf_get_mark(0, "<"))
 		end_line, end_col = unpack(vim.api.nvim_buf_get_mark(0, ">"))
 
@@ -62,7 +61,7 @@ function M.calculate(opts)
 	local formatted_result = calculator.format_result(result)
 
 	if mode == "replace" then
-		if use_visual then
+		if visual then
 			vim.api.nvim_buf_set_text(0, start_line - 1, start_col, end_line - 1, end_col + 1, { formatted_result })
 		else
 			vim.api.nvim_set_current_line(formatted_result)
@@ -70,7 +69,7 @@ function M.calculate(opts)
 	else
 		local append_text = " = " .. formatted_result
 
-		if use_visual then
+		if visual then
 			vim.api.nvim_buf_set_text(0, end_line - 1, end_col + 1, end_line - 1, end_col + 1, { append_text })
 		else
 			local current_line = vim.api.nvim_get_current_line()
