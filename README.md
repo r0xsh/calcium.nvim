@@ -91,7 +91,6 @@ y = x * pi -- = 12.5663706144
 ## 🏆 Roadmap
 
 - [ ] Fix
-  - [ ] Handle whole line selection and newline character selection
   - [ ] `./plugin/calcium.lua`, should it have more checks? Should everything be in another path (so it doesn't load on start), should it have the global variable check?
 - [x] Cmdline `<mode>` suggestions
 - [ ] Cmdline calculations

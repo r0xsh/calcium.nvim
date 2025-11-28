@@ -20,6 +20,9 @@ function M.calculate(mode, visual)
 
 		local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
 
+		local end_line_content = lines[#lines] or ""
+		end_col = math.min(end_col, #end_line_content - 1)
+
 		if #lines == 1 then
 			expr = string.sub(lines[1], start_col + 1, end_col + 1)
 		else
