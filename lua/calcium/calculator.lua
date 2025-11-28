@@ -39,117 +39,105 @@ function M.evaluate_expression(expr, variables)
 	-- Replace common mathematical operations
 	expr = expr:gsub("%^", "^")
 
-	local math_functions_lib = {
-		math = math,
-		abs = math.abs,
-		acos = math.acos,
-		asin = math.asin,
-		atan = math.atan,
-		atan2 = math.atan2,
-		avg = function(...)
-			local t = { ... }
-			local sum = 0
-			for _, v in ipairs(t) do
-				sum = sum + v
-			end
-			return sum / #t
-		end,
-		ceil = math.ceil,
-		clamp = function(n, min, max)
-			return math.max(min, math.min(max, n))
-		end,
-		cos = math.cos,
-		cosh = math.cosh,
-		deg = math.deg,
-		exp = math.exp,
-		fact = function(n)
-			n = math.floor(n)
-			if n < 0 then
-				return 0
-			end
-			local r = 1
-			for i = 2, n do
-				r = r * i
-			end
-			return r
-		end,
-		fib = function(n)
-			n = math.floor(n)
-			if n < 0 then
-				return 0
-			end
-			if n < 2 then
-				return n
-			end
-			local a, b = 0, 1
-			for _ = 2, n do
-				a, b = b, a + b
-			end
-			return b
-		end,
-		floor = math.floor,
-		fmod = math.fmod,
-		gcd = function(a, b)
-			a, b = math.abs(a), math.abs(b)
-			while b ~= 0 do
-				a, b = b, a % b
-			end
-			return a
-		end,
-		-- lcm = function(a, b)
-		-- 	return math.abs(a * b) / gcd(a, b)
-		-- end,
-		log = math.log,
-		log10 = math.log10,
-		max = math.max,
-		median = function(...)
-			local t = { ... }
-			table.sort(t)
-			local n = #t
-			if n % 2 == 1 then
-				return t[(n + 1) / 2]
-			else
-				return (t[n / 2] + t[n / 2 + 1]) / 2
-			end
-		end,
-		min = math.min,
-		modf = math.modf,
-		pi = math.pi,
-		pow = math.pow,
-		rad = math.rad,
-		random = math.random,
-		range = function(min, max)
-			return max - min
-		end,
-		round = function(n, d)
-			d = d or 0
-			local m = 10 ^ d
-			return math.floor(n * m + 0.5) / m
-		end,
-		sign = function(n)
-			return (n > 0 and 1) or (n < 0 and -1) or 0
-		end,
-		sin = math.sin,
-		sinh = math.sinh,
-		sqrt = math.sqrt,
-		tan = math.tan,
-		tanh = math.tanh,
-		trunc = function(n)
-			return n > 0 and math.floor(n) or math.ceil(n)
-		end,
-	}
+	-- Mathematical Functions Library definition
+	local mfl = {}
+
+	for k, v in pairs(math) do
+		mfl[k] = v
+	end
+
+	mfl.avg = function(...)
+		local t = { ... }
+		local sum = 0
+		for _, v in ipairs(t) do
+			sum = sum + v
+		end
+		return sum / #t
+	end
+
+	mfl.clamp = function(n, min, max)
+		return math.max(min, math.min(max, n))
+	end
+
+	mfl.fact = function(n)
+		n = math.floor(n)
+		if n < 0 then
+			return 0
+		end
+		local r = 1
+		for i = 2, n do
+			r = r * i
+		end
+		return r
+	end
+
+	mfl.fib = function(n)
+		n = math.floor(n)
+		if n < 0 then
+			return 0
+		end
+		if n < 2 then
+			return n
+		end
+		local a, b = 0, 1
+		for _ = 2, n do
+			a, b = b, a + b
+		end
+		return b
+	end
+
+	mfl.gcd = function(a, b)
+		a, b = math.abs(a), math.abs(b)
+		while b ~= 0 do
+			a, b = b, a % b
+		end
+		return a
+	end
+
+	mfl.lcm = function(a, b)
+		return math.abs(a * b) / mfl.gcd(a, b)
+	end
+
+	mfl.median = function(...)
+		local t = { ... }
+		table.sort(t)
+		local n = #t
+		if n % 2 == 1 then
+			return t[(n + 1) / 2]
+		else
+			return (t[n / 2] + t[n / 2 + 1]) / 2
+		end
+	end
+
+	mfl.range = function(min, max)
+		return max - min
+	end
+
+	mfl.round = function(n, d)
+		d = d or 0
+		local m = 10 ^ d
+		return math.floor(n * m + 0.5) / m
+	end
+
+	mfl.sign = function(n)
+		return (n > 0 and 1) or (n < 0 and -1) or 0
+	end
+
+	mfl.trunc = function(n)
+		return n > 0 and math.floor(n) or math.ceil(n)
+	end
 
 	-- Try to evaluate the expression
-	local func, err = load("return " .. expr, "expr", "t", math_functions_lib)
+	local func, err = load("return " .. expr, "expr", "t", mfl)
 
 	if not func then
-		return false, "Syntax error: " .. tostring(err)
+		return false, tostring(err)
 	end
 
 	local success, result = pcall(func)
 
 	if not success then
-		return false, "Evaluation error: " .. tostring(result)
+		return false, tostring(result)
 	end
 
 	if type(result) ~= "number" then
