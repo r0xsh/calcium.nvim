@@ -57,6 +57,10 @@ A powerful calculator with visual mode and variable support.
 
 " Calculate the expression in the visual selection and replace with the result
 :'<,'>Calcium replace
+
+" Calculate an expression in the cmdline
+:Calcium 2 + pi * random()
+
 ```
 
 ```lua
