@@ -1,6 +1,6 @@
 # 🧮 calcium.nvim
 
-A powerful calculator with visual mode and variable support.
+A powerful [`lua-lib-math`](https://www.lua.org/pil/18.html) in-buffer calculator with visual mode, functions and variable support.
 
 ![calcium](https://github.com/user-attachments/assets/4e805a43-2f8c-44ec-919e-fef4e65611b3)
 
