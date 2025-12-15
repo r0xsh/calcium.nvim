@@ -91,6 +91,7 @@ y = x * pi -- = 12.5663706144
 - **Floating Point**: `frexp`, `ldexp`
 - **Random**: `random`, `randomseed`
 - **Constants**: `pi`, `huge`
+- **Boolean**: `==`, `~=`, `>`, `<`, `>=`, `<=`
 
 ## 🏆 Roadmap
 
@@ -98,6 +99,6 @@ y = x * pi -- = 12.5663706144
   - [ ] `./plugin/calcium.lua`, should it have more checks? Should everything be in another path (so it doesn't load on start), should it have the global variable check?
 - [x] Cmdline `<mode>` suggestions
 - [x] Cmdline calculations
+- [x] Boolean result (`2 + 2 >= 3` `= true`)
 - [ ] Smart selection when no visual selection is provided (e.g., "I have `2 + 1` cats")
-- [ ] Boolean result when a `=` is already present
 - [ ] Playground mode, a small window in which the results are displayed live while typing

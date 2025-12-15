@@ -140,8 +140,8 @@ function M.evaluate_expression(expr, variables)
 		return false, tostring(result)
 	end
 
-	if type(result) ~= "number" then
-		return false, "Result is not a number"
+	if type(result) ~= "number" and type(result) ~= "boolean" then
+		return false, "Result is not a number or boolean"
 	end
 
 	return true, result
@@ -154,6 +154,10 @@ function M.evaluate(expr, buffer_lines)
 end
 
 function M.format_result(result)
+	if type(result) == "boolean" then
+		return tostring(result)
+	end
+
 	-- Check if it's a very small or very large number
 	if math.abs(result) < 0.001 and result ~= 0 then
 		return string.format("%.6e", result)
