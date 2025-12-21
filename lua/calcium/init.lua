@@ -47,17 +47,39 @@ function M.calculate(mode, visual)
 			expr = table.concat(lines, "\n")
 		end
 	else
-		-- Use current line
+		-- Use current line with smart extraction
 		start_line = vim.api.nvim_win_get_cursor(0)[1]
 		local line = vim.api.nvim_get_current_line()
-		expr = line
-		start_col = 0
+		local cursor_col = vim.api.nvim_win_get_cursor(0)[2]  -- 0-indexed
+
+		-- Get buffer lines first for variable extraction
+		local bufnr = vim.api.nvim_get_current_buf()
+		local buffer_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+		-- Try smart expression extraction
+		local parser = require("calcium.parser")
+		local extracted = parser.extract_expression_at_cursor(line, cursor_col + 1, buffer_lines)
+
+		if extracted and extracted.text ~= "" then
+			-- Use smart extracted expression
+			expr = extracted.text
+			start_col = extracted.start_col - 1  -- Convert to 0-indexed for Vim API
+			end_col = extracted.end_col - 1
+		else
+			-- Fallback: use entire line (original behavior)
+			expr = line
+			start_col = 0
+			end_col = #line - 1
+		end
+
 		end_line = start_line
-		end_col = #line - 1
 	end
 
-	local bufnr = vim.api.nvim_get_current_buf()
-	local buffer_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+	-- Get buffer lines if not already fetched (for visual mode)
+	if not buffer_lines then
+		local bufnr = vim.api.nvim_get_current_buf()
+		buffer_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+	end
 
 	local success, result = handle_calculation(expr, buffer_lines)
 	if success == nil then
@@ -73,8 +95,16 @@ function M.calculate(mode, visual)
 		if visual then
 			vim.api.nvim_buf_set_text(0, start_line - 1, start_col, end_line - 1, end_col + 1, { result })
 		else
-			local indentation = vim.api.nvim_get_current_line():match("^(%s+)") or ""
-			vim.api.nvim_set_current_line(indentation .. result)
+			-- For normal mode: check if we extracted the whole line or just part
+			local current_line = vim.api.nvim_get_current_line()
+			if start_col == 0 and end_col == #current_line - 1 then
+				-- Whole line extracted - preserve indentation
+				local indentation = current_line:match("^(%s+)") or ""
+				vim.api.nvim_set_current_line(indentation .. result)
+			else
+				-- Partial expression extracted - replace just that part
+				vim.api.nvim_buf_set_text(0, start_line - 1, start_col, start_line - 1, end_col + 1, { result })
+			end
 		end
 	else
 		local append_text = " = " .. result
@@ -82,8 +112,15 @@ function M.calculate(mode, visual)
 		if visual then
 			vim.api.nvim_buf_set_text(0, end_line - 1, end_col + 1, end_line - 1, end_col + 1, { append_text })
 		else
+			-- For normal mode: append at the end of the extracted expression
 			local current_line = vim.api.nvim_get_current_line()
-			vim.api.nvim_set_current_line(current_line .. append_text)
+			if start_col == 0 and end_col == #current_line - 1 then
+				-- Whole line extracted - append at end of line
+				vim.api.nvim_set_current_line(current_line .. append_text)
+			else
+				-- Partial expression extracted - insert after the expression
+				vim.api.nvim_buf_set_text(0, start_line - 1, end_col + 1, start_line - 1, end_col + 1, { append_text })
+			end
 		end
 	end
 
