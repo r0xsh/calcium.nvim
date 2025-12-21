@@ -1,6 +1,96 @@
 local M = {}
 local utils = require("calcium.utils")
 
+-- Pre-built math function library for safe expression evaluation
+local mfl = {}
+
+-- Copy all standard math functions
+for k, v in pairs(math) do
+	mfl[k] = v
+end
+
+-- Custom utility functions
+mfl.avg = function(...)
+	local t = { ... }
+	local sum = 0
+	for _, v in ipairs(t) do
+		sum = sum + v
+	end
+	return sum / #t
+end
+
+mfl.clamp = function(n, min, max)
+	return math.max(min, math.min(max, n))
+end
+
+mfl.fact = function(n)
+	n = math.floor(n)
+	if n < 0 then
+		return 0
+	end
+	local r = 1
+	for i = 2, n do
+		r = r * i
+	end
+	return r
+end
+
+mfl.fib = function(n)
+	n = math.floor(n)
+	if n < 0 then
+		return 0
+	end
+	if n < 2 then
+		return n
+	end
+	local a, b = 0, 1
+	for _ = 2, n do
+		a, b = b, a + b
+	end
+	return b
+end
+
+mfl.gcd = function(a, b)
+	a, b = math.abs(a), math.abs(b)
+	while b ~= 0 do
+		a, b = b, a % b
+	end
+	return a
+end
+
+mfl.lcm = function(a, b)
+	return math.abs(a * b) / mfl.gcd(a, b)
+end
+
+mfl.median = function(...)
+	local t = { ... }
+	table.sort(t)
+	local n = #t
+	if n % 2 == 1 then
+		return t[(n + 1) / 2]
+	else
+		return (t[n / 2] + t[n / 2 + 1]) / 2
+	end
+end
+
+mfl.range = function(min, max)
+	return max - min
+end
+
+mfl.round = function(n, d)
+	d = d or 0
+	local m = 10 ^ d
+	return math.floor(n * m + 0.5) / m
+end
+
+mfl.sign = function(n)
+	return (n > 0 and 1) or (n < 0 and -1) or 0
+end
+
+mfl.trunc = function(n)
+	return n > 0 and math.floor(n) or math.ceil(n)
+end
+
 function M.extract_variables(buffer_lines)
 	local variables = {}
 
@@ -37,95 +127,7 @@ function M.evaluate_expression(expr, variables)
 		end
 	end
 
-	-- Mathematical Functions Library definition
-	local mfl = {}
-
-	for k, v in pairs(math) do
-		mfl[k] = v
-	end
-
-	mfl.avg = function(...)
-		local t = { ... }
-		local sum = 0
-		for _, v in ipairs(t) do
-			sum = sum + v
-		end
-		return sum / #t
-	end
-
-	mfl.clamp = function(n, min, max)
-		return math.max(min, math.min(max, n))
-	end
-
-	mfl.fact = function(n)
-		n = math.floor(n)
-		if n < 0 then
-			return 0
-		end
-		local r = 1
-		for i = 2, n do
-			r = r * i
-		end
-		return r
-	end
-
-	mfl.fib = function(n)
-		n = math.floor(n)
-		if n < 0 then
-			return 0
-		end
-		if n < 2 then
-			return n
-		end
-		local a, b = 0, 1
-		for _ = 2, n do
-			a, b = b, a + b
-		end
-		return b
-	end
-
-	mfl.gcd = function(a, b)
-		a, b = math.abs(a), math.abs(b)
-		while b ~= 0 do
-			a, b = b, a % b
-		end
-		return a
-	end
-
-	mfl.lcm = function(a, b)
-		return math.abs(a * b) / mfl.gcd(a, b)
-	end
-
-	mfl.median = function(...)
-		local t = { ... }
-		table.sort(t)
-		local n = #t
-		if n % 2 == 1 then
-			return t[(n + 1) / 2]
-		else
-			return (t[n / 2] + t[n / 2 + 1]) / 2
-		end
-	end
-
-	mfl.range = function(min, max)
-		return max - min
-	end
-
-	mfl.round = function(n, d)
-		d = d or 0
-		local m = 10 ^ d
-		return math.floor(n * m + 0.5) / m
-	end
-
-	mfl.sign = function(n)
-		return (n > 0 and 1) or (n < 0 and -1) or 0
-	end
-
-	mfl.trunc = function(n)
-		return n > 0 and math.floor(n) or math.ceil(n)
-	end
-
-	-- Try to evaluate the expression
+	-- Evaluate the expression in sandboxed environment
 	local func, err = load("return " .. expr, "expr", "t", mfl)
 
 	if not func then
@@ -139,7 +141,7 @@ function M.evaluate_expression(expr, variables)
 	end
 
 	if type(result) ~= "number" and type(result) ~= "boolean" then
-		return false, "Result is not a number, variable or boolean"
+		return false, "Result must be a number or boolean"
 	end
 
 	return true, result
