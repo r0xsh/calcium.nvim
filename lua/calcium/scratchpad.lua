@@ -66,7 +66,6 @@ function M.evaluate_scratchpad()
 
     vim.api.nvim_buf_clear_namespace(state.buf, state.ns, 0, -1)
 
-    -- Use calculator.extract_variables to get all variables from the buffer
     local variables = calculator.extract_variables(lines)
 
     for i, line in ipairs(lines) do
@@ -78,13 +77,13 @@ function M.evaluate_scratchpad()
 
             -- For variable assignments, evaluate the expression and update variables
             if var_name then
-                local success, result = calculator.evaluate(var_expr, variables)
+                local success, result = calculator.evaluate_expression(var_expr, variables)
                 if success then
                     variables[var_name] = result
                 end
             else
                 -- For regular expressions, evaluate and display result
-                local success, result = calculator.evaluate(expr, variables)
+                local success, result = calculator.evaluate_expression(expr, variables)
                 if success then
                     render_result(i - 1, calculator.format_result(result), #line)
                 end
