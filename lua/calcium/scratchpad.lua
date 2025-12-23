@@ -1,5 +1,7 @@
 local M = {}
 
+local config = require("calcium.config")
+
 -- Centralized state
 local state = {
     buf = nil,
@@ -37,7 +39,7 @@ local function setup_window()
         height = height,
         row = math.floor((ui.height - height) / 2),
         col = math.floor((ui.width - width) / 2),
-        border = vim.o.winborder or "single",
+        border = config.options.scratchpad.border or "single",
         style = "minimal",
         title = " Calcium Scratchpad ",
         title_pos = "center",
