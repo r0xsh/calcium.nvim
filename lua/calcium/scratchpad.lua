@@ -69,24 +69,10 @@ function M.evaluate_scratchpad()
     local variables = calculator.extract_variables(lines)
 
     for i, line in ipairs(lines) do
-        local clean_line = line:gsub("%s*%-%-.*$", ""):gsub("%s*#.*$", "")
-        local expr = vim.trim(clean_line)
-
-        if expr ~= "" then
-            local var_name, var_expr = expr:match("^([%w_]+)%s*=%s*(.+)$")
-
-            -- For variable assignments, evaluate the expression and update variables
-            if var_name then
-                local success, result = calculator.evaluate_expression(var_expr, variables)
-                if success then
-                    variables[var_name] = result
-                end
-            else
-                -- For regular expressions, evaluate and display result
-                local success, result = calculator.evaluate_expression(expr, variables)
+        if line ~= "" then
+                local success, result = calculator.evaluate_expression(line, variables)
                 if success then
                     render_result(i - 1, calculator.format_result(result), #line)
-                end
             end
         end
     end

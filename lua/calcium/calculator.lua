@@ -92,25 +92,23 @@ mfl.trunc = function(n)
 end
 
 function M.extract_variables(buffer_lines)
-	local variables = {}
+    local variables = {}
 
-	local pattern = "^%s*([%w_]+)%s*=%s*(.+)$"
+    for _, line in ipairs(buffer_lines) do
+        local clean = line:gsub("%s*%-%-.*$", ""):gsub("%s*#.*$", "")
+        clean = utils.trim(clean)
 
-	for _, line in ipairs(buffer_lines) do
-		local var_name, var_expr = line:match(pattern)
-		if var_name and var_expr then
-			-- Remove trailing comments
-			var_expr = var_expr:gsub("%s*%-%-.*$", ""):gsub("%s*#.*$", "")
-			var_expr = utils.trim(var_expr)
+        if clean ~= "" then
+            local var_name, var_expr = clean:match("^([%w_]+)%s*=%s*([^=].*)$")
 
-			local success, value = M.evaluate_expression(var_expr, variables)
-			if success then
-				variables[var_name] = value
-			end
-		end
-	end
+            if var_name then
+                local success, value = M.evaluate_expression(var_expr, variables)
+                if success then variables[var_name] = value end
+            end
+        end
+    end
 
-	return variables
+    return variables
 end
 
 function M.evaluate_expression(expr, variables)
@@ -118,15 +116,6 @@ function M.evaluate_expression(expr, variables)
 	expr = expr:gsub("(%d+%.?%d*)e([%-%+]?%d+)", function(num, exp)
 		return string.format("(%s * 10^%s)", num, exp)
 	end)
-
-    -- Normalize "assignment-style" equals (=) into "comparison-style" (==)
-    -- This allows users to type "x = 5" and have it evaluated as a boolean check.
-    -- 1. Replace '=' with '==' only if it isn't part of an existing operator (==, >=, <=, !=, ~=)
-    expr = expr:gsub("([^=<>!~])=([^=])", "%1==%2")
-    -- 2. Handle '=' at the very beginning of the string
-    expr = expr:gsub("^=([^=])", "==%1")
-    -- 3. Handle '=' at the very end of the string
-    expr = expr:gsub("([^=])=$", "%1==")
 
 	-- Replace variables with their values
 	if variables then
