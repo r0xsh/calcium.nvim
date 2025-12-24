@@ -41,7 +41,7 @@ local function setup_window()
 		height = height,
 		row = math.floor((ui.height - height) / 2),
 		col = math.floor((ui.width - width) / 2),
-		border = config.options.scratchpad.border or "rounded",
+		border = config.options.scratchpad.border,
 		style = "minimal",
 		title = " Calcium ",
 		title_pos = "center",

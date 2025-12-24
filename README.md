@@ -32,6 +32,10 @@ A powerful [`lua-lib-math`](https://www.lua.org/pil/18.html) in-buffer calculato
     -- default configuration
     notifications = true, -- notify result
     default_mode = "append", -- or `replace` the expression
+	scratchpad = {
+		border = "rounded", -- scratchpad border style, :help 'winborder' 
+		virtual_text_format = " = %s", -- scratchpad virtual text format
+	},
   },
   keys = {
     -- example keymap
