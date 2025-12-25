@@ -6,6 +6,14 @@ endif
 syntax match calciumNumber /\v<\d+(\.\d+)?>/
 highlight default link calciumNumber Number
 
+" Variables
+syntax match calciumVariable /\v<[a-zA-Z_]\w*>/
+if hlexists('@variable.member')
+  highlight default link calciumVariable @variable.member
+else
+  highlight default link calciumVariable DiagnosticHint
+endif
+
 " Result
 syntax region calciumResult
   \ start=/=/
