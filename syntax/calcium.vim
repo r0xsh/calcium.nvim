@@ -50,5 +50,8 @@ else
   highlight default link calciumFunctionName Function
 endif
 
+" Re-use answer
+syntax match calciumAnswer /\v<(ans|_)>/
+highlight default link calciumAnswer Special
 
 let b:current_syntax = "calcium"
