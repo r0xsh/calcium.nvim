@@ -73,8 +73,10 @@ mfl.median = function(...)
 	end
 end
 
-mfl.range = function(min, max)
-	return max - min
+mfl.range = function(...)
+	local t = { ... }
+	table.sort(t)
+	return t[#t] - t[1]
 end
 
 mfl.round = function(n, d)
