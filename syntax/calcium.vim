@@ -35,6 +35,10 @@ else
   highlight default link calciumBracket Delimiter
 endif
 
+" Re-use answer
+syntax match calciumAnswer /\v<(ans|_)>/
+highlight default link calciumAnswer Special
+
 " Function name
 syntax match calciumFunctionName /\v<[A-Za-z_][A-Za-z0-9_]*\ze\(/
 if hlexists('@keyword.function')
@@ -42,9 +46,5 @@ if hlexists('@keyword.function')
 else
   highlight default link calciumFunctionName Function
 endif
-
-" Re-use answer
-syntax match calciumAnswer /\v<(ans|_)>/
-highlight default link calciumAnswer Special
 
 let b:current_syntax = "calcium"
