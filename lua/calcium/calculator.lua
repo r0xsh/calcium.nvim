@@ -10,15 +10,6 @@ for k, v in pairs(math) do
 end
 
 -- Custom utility functions
-mfl.avg = function(...)
-	local t = { ... }
-	local sum = 0
-	for _, v in ipairs(t) do
-		sum = sum + v
-	end
-	return sum / #t
-end
-
 mfl.clamp = function(n, min, max)
 	return math.max(min, math.min(max, n))
 end
@@ -60,6 +51,15 @@ end
 
 mfl.lcm = function(a, b)
 	return math.abs(a * b) / mfl.gcd(a, b)
+end
+
+mfl.mean = function(...)
+	local t = { ... }
+	local sum = 0
+	for _, v in ipairs(t) do
+		sum = sum + v
+	end
+	return sum / #t
 end
 
 mfl.median = function(...)
