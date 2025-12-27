@@ -6,7 +6,7 @@ M.defaults = {
 	scratchpad = {
 		border = "rounded",
 		virtual_text = {
-			format = " = %s",
+			format = "= %s",
 			highlight_group = "Comment",
 		},
 		result_variable = "ans",

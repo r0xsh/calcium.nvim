@@ -35,7 +35,7 @@ A powerful [`lua-lib-math`](https://www.lua.org/pil/18.html) in-buffer calculato
     scratchpad = {
         border = "rounded",               -- floating window border style, :help 'winborder' 
         virtual_text = {
-            format = " = %s",             -- virtual text format
+            format = "= %s",              -- virtual text format
             highlight_group = "Comment",  -- virtual text highlight group
         },
         result_variable = "ans"           -- name of the variable for the last computation result
